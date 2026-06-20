@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HPTS Perfume - Thêm Nước Hoa Mới</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: url('/nuochoa.jpg') no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+        }
+
+        .custom-card {
+            background-color: rgba(10, 15, 30, 0.75) !important; 
+            backdrop-filter: blur(10px); 
+            -webkit-backdrop-filter: blur(10px);
+            width: 450px; 
+            border: 1px solid rgba(255, 255, 255, 0.12) !important;
+            border-top: 5px solid #00f5d4 !important; 
+            border-radius: 12px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6) !important;
+        }
+
+        .form-title {
+            font-family: 'Cinzel', 'Times New Roman', serif;
+            background: linear-gradient(135deg, #ffffff 30%, #ffd000 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.8));
+            font-weight: 800;
+            letter-spacing: 1px;
+        }
+
+        .custom-card .form-control {
+            background-color: rgba(255, 255, 255, 0.1) !important;
+            border: 1px solid rgba(255, 255, 255, 0.2) !important;
+            color: #ffffff !important;
+            font-weight: 500;
+        }
+
+        .custom-card .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.5) !important;
+        }
+
+        .custom-card .form-control:focus {
+            background-color: rgba(255, 255, 255, 0.15) !important;
+            border-color: #00f5d4 !important;
+            box-shadow: 0 0 8px rgba(0, 245, 212, 0.4) !important;
+        }
+
+        .btn-success-custom {
+            background: linear-gradient(135deg, #0f9b0f 0%, #116911 100%) !important;
+            border: none !important;
+            color: #ffffff !important;
+            transition: all 0.15s ease-in-out;
+        }
+        
+        .btn-success-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(15, 155, 15, 0.4) !important;
+            filter: brightness(1.1);
+        }
+
+        .btn-success-custom:active {
+            transform: scale(0.95) translateY(1px) !important;
+            filter: brightness(0.85);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2) !important;
+        }
+
+        .link-back {
+            color: rgba(255, 255, 255, 0.6) !important;
+            transition: color 0.2s;
+        }
+        .link-back:hover {
+            color: #00f5d4 !important;
+        }
+    </style>
+</head>
+<body class="d-flex align-items-center">
+
+    <div class="card mx-auto shadow p-4 custom-card">
+        <h4 class="text-center mb-4 form-title">THÊM NƯỚC HOA MỚI</h4>
+        
+        <input id="ma" class="form-control mb-2" placeholder="Mã nước hoa (Ví dụ: NH04)">
+        <input id="ten" class="form-control mb-2" placeholder="Tên sản phẩm">
+        <input id="hang" class="form-control mb-2" placeholder="Thương hiệu (Hãng)">
+        <input id="tich" type="number" class="form-control mb-2" placeholder="Dung tích (ml)">
+        <input id="soluong" type="number" class="form-control mb-2" placeholder="Số lượng nhập kho">
+        <input id="gia" type="number" class="form-control mb-3" placeholder="Giá bán (VND)">
+        
+        <button class="btn btn-success-custom w-100 fw-bold py-2 shadow-sm" onclick="save()">Lưu Sản Phẩm</button>
+        <a href="index.html" class="d-block text-center mt-3 text-decoration-none small fw-semibold link-back">Quay lại danh sách</a>
+    </div>
+
+    <script>
+        // BẢO MẬT: Kiểm tra mã bí mật trên URL, nếu sai đá ngay về trang index
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('token') !== 'hieutam2502') {
+            alert("Bạn không có quyền truy cập trang này!");
+            location.href = "index.html";
+        }
+
+        function save() {
+            const data = {
+                manuoc_hoa: document.getElementById('ma').value,
+                tennuoc_hoa: document.getElementById('ten').value,
+                thuong_hieu: document.getElementById('hang').value,
+                dung_tich: parseInt(document.getElementById('tich').value),
+                so_luong: parseInt(document.getElementById('soluong').value || 0),
+                gia_ban: parseFloat(document.getElementById('gia').value)
+            };
+            // Gửi xong chuyển về trang index kèm token để bạn đỡ phải gõ lại mã bí mật
+            fetch('/api/nuochoa', {
+                method: 'POST', 
+                headers: { 'Content-Type': 'application/json' }, 
+                body: JSON.stringify(data) 
+            }).then(res => res.ok ? location.href="index.html?token=hieutam2502" : alert("Có lỗi xảy ra, hãy kiểm tra lại!")); 
+        }
+    </script>
+</body>
+</html>

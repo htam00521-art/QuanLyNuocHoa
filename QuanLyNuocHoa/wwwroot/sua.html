@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <!-- CẤU HÌNH TƯƠNG THÍCH MOBILE -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HPTS Perfume - Cập Nhật Thông Tin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght=500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: url('/nuochoa.jpg') no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+        }
+
+        .custom-card {
+            background-color: rgba(10, 15, 30, 0.75) !important; 
+            backdrop-filter: blur(10px); 
+            -webkit-backdrop-filter: blur(10px);
+            width: 450px; 
+            max-width: 95%; /* TỐI ƯU MOBILE: Tự động co lại ôm khít màn hình dọc điện thoại */
+            border: 1px solid rgba(255, 255, 255, 0.12) !important;
+            border-top: 5px solid #bf953f !important; 
+            border-radius: 12px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6) !important;
+        }
+
+        .form-title {
+            font-family: 'Cinzel', 'Times New Roman', serif;
+            background: linear-gradient(135deg, #bf953f 0%, #fcf6ba 25%, #b38728 50%, #fbf5b7 75%, #aa771c 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.8));
+            font-weight: 800;
+            letter-spacing: 1px;
+        }
+
+        .custom-card label {
+            color: rgba(255, 255, 255, 0.8) !important;
+        }
+
+        .custom-card .form-control {
+            background-color: rgba(255, 255, 255, 0.1) !important;
+            border: 1px solid rgba(255, 255, 255, 0.2) !important;
+            color: #ffffff !important;
+            font-weight: 500;
+        }
+
+        /* Định dạng hiển thị ô Mã nước hoa bị khóa */
+        .custom-card .form-control[readonly] {
+            background-color: rgba(255, 255, 255, 0.05) !important;
+            color: #00f5d4 !important; 
+            border-color: rgba(255, 255, 255, 0.1) !important;
+            opacity: 0.8;
+        }
+
+        .custom-card .form-control:focus {
+            background-color: rgba(255, 255, 255, 0.15) !important;
+            border-color: #bf953f !important;
+            box-shadow: 0 0 8px rgba(191, 149, 63, 0.4) !important;
+        }
+
+        .btn-warning-custom {
+            background: linear-gradient(135deg, #bf953f 0%, #aa771c 100%) !important;
+            border: none !important;
+            color: #ffffff !important;
+            transition: all 0.15s ease-in-out;
+        }
+        .btn-warning-custom:hover {
+            filter: brightness(1.1);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(191, 149, 63, 0.3) !important;
+        }
+        .btn-warning-custom:active {
+            transform: scale(0.95) translateY(1px) !important;
+            filter: brightness(0.85);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2) !important;
+        }
+
+        .link-back {
+            color: rgba(255, 255, 255, 0.6) !important;
+            transition: color 0.2s;
+        }
+        .link-back:hover {
+            color: #bf953f !important;
+        }
+    </style>
+</head>
+<body class="d-flex align-items-center py-4">
+    
+    <div class="card mx-auto shadow p-4 custom-card">
+        <h4 class="text-center mb-3 fw-bold form-title">CẬP NHẬT THÔNG TIN</h4>
+        
+        <label class="small mb-1 fw-semibold">Mã nước hoa (Không thể sửa):</label>
+        <input id="ma" class="form-control mb-2" readonly style="font-weight: bold;">
+        
+        <label class="small mb-1 fw-semibold">Tên nước hoa mới:</label>
+        <input id="ten" class="form-control mb-2">
+        
+        <label class="small mb-1 fw-semibold">Thương hiệu:</label>
+        <input id="hang" class="form-control mb-2">
+        
+        <label class="small mb-1 fw-semibold">Dung tích (ml):</label>
+        <input id="tich" type="number" class="form-control mb-2">
+
+        <label class="small mb-1 fw-semibold">Số lượng trong kho:</label>
+        <input id="soluong" type="number" class="form-control mb-2">
+        
+        <label class="small mb-1 fw-semibold">Giá bán mới (VND):</label>
+        <input id="gia" type="number" class="form-control mb-3">
+        
+        <button class="btn btn-warning-custom w-100 fw-bold py-2 shadow-sm" onclick="update()">Cập Nhật Ngay</button>
+        
+        <!-- BẢO MẬT: Giữ nguyên Token Admin khi bấm Hủy bỏ để không bị mất giao diện quản trị -->
+        <a href="index.html?token=hieutam2502" class="d-block text-center mt-3 text-decoration-none small fw-semibold link-back">Hủy bỏ</a>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        
+        // BẢO MẬT: Nếu người ngoài cố tình vào link sửa lén, đá về trang chủ ngay
+        if (urlParams.get('token') !== 'hieutam2502') {
+            alert("Bạn không có quyền truy cập trang này!");
+            location.href = "index.html";
+        }
+
+        // Tự động điền dữ liệu cũ được truyền từ URL sang các ô Input tương ứng
+        document.getElementById('ma').value = urlParams.get('ma'); 
+        document.getElementById('ten').value = urlParams.get('ten'); 
+        document.getElementById('hang').value = urlParams.get('hang');
+        document.getElementById('tich').value = urlParams.get('tich');
+        document.getElementById('gia').value = urlParams.get('gia');
+        document.getElementById('soluong').value = urlParams.get('luong') || 0;
+
+        // Hàm thực thi gọi API cập nhật dữ liệu Backend
+        function update() {
+            const data = {
+                manuoc_hoa: urlParams.get('ma'), 
+                tennuoc_hoa: document.getElementById('ten').value,
+                thuong_hieu: document.getElementById('hang').value,
+                dung_tich: parseInt(document.getElementById('tich').value),
+                so_luong: parseInt(document.getElementById('soluong').value || 0),
+                gia_ban: parseFloat(document.getElementById('gia').value)
+            };
+            
+            fetch('/api/nuochoa', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' }, 
+                body: JSON.stringify(data) 
+            }).then(res => {
+                if (res.ok) {
+                    // Cập nhật xong chuyển hướng về trang chủ bản có Token để tiếp tục quản trị công việc
+                    location.href = "index.html?token=hieutam2502";
+                } else {
+                    alert("Cập nhật thất bại!");
+                }
+            });
+        }
+    </script>
+</body>
+</html>

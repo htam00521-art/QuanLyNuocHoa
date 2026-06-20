@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <!-- CẤU HÌNH TƯƠNG THÍCH ĐIỆN THOẠI: Ngăn trình duyệt tự động thu nhỏ trang web -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HPTS Perfume - Quản Lý Cửa Hàng Nước Hoa</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght=500;700;900&display=swap" rel="stylesheet">
+    <style>
+        /* Thiết lập phông nền cho toàn bộ thân trang web */
+        body {
+            background: url('/nuochoa.jpg') no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+            padding-top: 174px; 
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        /* GHIM BANNER CỐ ĐỊNH Ở ĐẦU TRANG */
+        .store-banner {
+            background-color: rgba(10, 15, 30, 0.75) !important; 
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 5px solid #bf953f; 
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000; 
+        }
+
+        /* Định dạng chữ tên cửa hàng sang trọng với font Cinzel & hiệu ứng Gold Gradient */
+        .store-title {
+            font-family: 'Cinzel', 'Times New Roman', serif;
+            font-size: 4.5rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 6px;
+            background: linear-gradient(135deg, #bf953f 0%, #fcf6ba 25%, #b38728 50%, #fbf5b7 75%, #aa771c 100%);
+            -webkit-background-clip: text;
+            background-clip: text; 
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(3px 3px 5px rgba(0, 0, 0, 0.6));
+        }
+
+        /* KHUNG CHỨA TRONG SUỐT */
+        .content-container {
+            background-color: transparent !important; 
+            backdrop-filter: none !important;
+            border: none !important;
+            box-shadow: none !important;
+            padding: 10px !important;
+        }
+
+        /* THIẾT KẾ TIÊU ĐỀ "DANH SÁCH SẢN PHẨM NƯỚC HOA" NỔI BẬT NỀN TỐI */
+        .content-container h2 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, #ffd000 30%, #ffd000 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.9));
+            text-transform: uppercase;
+        }
+
+        /* Thiết kế ô tìm kiếm kính mờ đồng bộ phong cách */
+        .search-box {
+            background-color: rgba(255, 255, 255, 0.1) !important;
+            border: 1px solid rgba(255, 255, 255, 0.2) !important;
+            color: #ffffff !important;
+            font-weight: 500;
+            border-radius: 8px;
+            padding: 10px 15px;
+            width: 350px;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .search-box::placeholder {
+            color: rgba(255, 255, 255, 0.5) !important;
+        }
+
+        .search-box:focus {
+            background-color: rgba(255, 255, 255, 0.15) !important;
+            border-color: #ffd000 !important;
+            box-shadow: 0 0 10px rgba(255, 208, 0, 0.4) !important;
+            outline: none;
+        }
+
+        /* ÁP ĐỤNG ĐỊNH DẠNG KÍNH MỜ TỐI MÀU TRỰC TIẾP VÀO PHẦN BẢNG */
+        .table {
+            background-color: rgba(10, 15, 30, 0.432) !important; 
+            backdrop-filter: blur(10px); 
+            border: 1px solid rgba(255, 255, 255, 0.12) !important;
+            border-radius: 12px; 
+            overflow: hidden;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6) !important;
+        }
+
+        .table tbody tr td {
+            background-color: transparent !important;
+            padding: 15px 10px !important;
+            vertical-align: middle !important;
+        }
+
+        .table thead tr th {
+            background-color: rgba(15, 76, 129, 0.95) !important; 
+            color: #ffffff !important;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.95rem;
+            letter-spacing: 0.5px;
+            border-bottom: 3px solid #bf953f !important; 
+            border-top: none !important;
+            padding: 15px 10px !important;
+        }
+
+        .table-bordered th, .table-bordered td {
+            border-color: rgba(255, 255, 255, 0.08) !important;
+        }
+
+        /* MÀU SẮC ĐẶC TRƯNG CỦA CÁC CỘT */
+        .col-ma-nuochoa {
+            color: #00f5d4 !important; 
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
+        }
+
+        .col-ten-sanpham {
+            color: #ffffff !important; 
+            font-weight: 600;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
+        }
+
+        .col-thuong-hieu {
+            color: #fbe094 !important; 
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
+        }
+
+        .col-dung-tich {
+            color: #90e0ef !important; 
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
+        }
+
+        .col-so-luong {
+            color: #ff9f1c !important; 
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
+        }
+
+        .text-danger-custom {
+            color: #ff0000 !important; 
+            font-weight: 800 !important;
+            font-size: 1.05rem;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.9);
+        }
+
+        .btn {
+            transition: all 0.15s ease-in-out !important; 
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3) !important;
+        }
+
+        .btn:active {
+            transform: scale(0.92) translateY(2px) !important; 
+            filter: brightness(0.85); 
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2) !important;
+        }
+
+        /* TỐI ƯU TRIỆT ĐỂ CHO MÀN HÌNH ĐIỆN THOẠI (DƯỚI 768PX) */
+        @media (max-width: 768px) {
+            body {
+                padding-top: 110px; /* Hạ thấp khoảng cách do banner điện thoại ngắn hơn */
+            }
+
+            .store-banner {
+                height: 90px; /* Thu nhỏ banner trên mobile */
+            }
+
+            .store-title {
+                font-size: 2.2rem; /* Giảm cỡ chữ để tránh tràn màn hình dọc */
+                letter-spacing: 2px;
+            }
+
+            /* Ép phần chứa tiêu đề và ô tìm kiếm xếp dọc trên điện thoại */
+            .content-container .d-flex.justify-content-between.align-items-center.mb-4 {
+                flex-direction: column !important;
+                align-items: center !important;
+                gap: 15px !important;
+            }
+
+            .content-container h2 {
+                font-size: 1.4rem;
+                text-align: center;
+                margin-bottom: 0 !important;
+            }
+
+            /* Chuyển các khối Tìm kiếm và nút Thêm mới thành hàng dọc rộng 100% */
+            .content-container .d-flex.gap-3 {
+                flex-direction: column !important;
+                width: 100% !important;
+                gap: 10px !important;
+            }
+
+            .search-box {
+                width: 100% !important; /* Ô tìm kiếm mở rộng hết chiều ngang điện thoại */
+            }
+
+            #btnThem {
+                width: 100% !important;
+                text-align: center;
+            }
+
+            /* SỬA CHÍNH: Mở khóa tính năng cuộn ngang mượt mà tuyệt đối bằng ngón tay */
+            .table-responsive {
+                display: block !important;
+                width: 100% !important;
+                overflow-x: auto !important; /* Ép buộc trình duyệt sinh thanh cuộn ngang */
+                position: relative;
+                -webkit-overflow-scrolling: touch; /* Giúp vuốt cảm ứng trên iPhone/Android siêu nhạy */
+                border: 1px solid rgba(255, 255, 255, 0.12);
+                border-radius: 12px;
+                overflow: hidden;
+                margin-bottom: 20px;
+            }
+
+            /* SỬA CHÍNH: Khóa chặt chiều rộng bảng ở mức 850px để tạo không gian vuốt, không cho co cụm chữ */
+            .table {
+                width: auto !important;
+                min-width: 850px !important; 
+                white-space: nowrap; /* Ngăn chặn chữ tự bẻ dòng làm méo mó cấu trúc cột */
+                margin-bottom: 0 !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- BANNER TÊN CỬA HÀNG -->
+    <div class="store-banner mb-4">
+        <h1 class="store-title">HPTS Perfume</h1>
+    </div>
+
+    <!-- THÂN TRANG WEB CHỨA BẢNG DỮ LIỆU -->
+    <div class="container container-fluid p-2">
+        <div class="container content-container">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="fw-bold mb-0">DANH SÁCH SẢN PHẨM NƯỚC HOA</h2>
+                
+                <div class="d-flex gap-3">
+                    <input type="text" id="searchInput" class="search-box" placeholder="Tìm theo tên hoặc thương hiệu..." onkeyup="timKiemSanPham()">
+                    <!-- Mặc định ẩn nút thêm mới bằng style="display:none;" -->
+                    <a href="them.html?token=hieutam2502" id="btnThem" class="btn btn-success fw-bold px-4 shadow" style="display: none;">+ Thêm nước hoa mới</a>
+                </div>
+            </div>
+            
+            <!-- Thẻ div bọc ngoài table giúp kích hoạt tính năng vuộn ngang trên điện thoại -->
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover vertical-align-middle shadow mb-0">
+                    <thead class="text-center align-middle">
+                        <tr>
+                            <!-- Đã loại bỏ các width cố định cũ để bảng co giãn tự nhiên theo CSS Media mới -->
+                            <th>Mã Nước Hoa</th>
+                            <th>Tên Sản Phẩm</th>
+                            <th>Thương Hiệu</th>
+                            <th>Dung Tích (ml)</th>
+                            <th>Số Lượng</th>
+                            <th>Giá Bán (VND)</th>
+                            <!-- Mặc định ẩn tiêu đề cột thao tác -->
+                            <th id="thThaoTac" style="display: none;">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody id="list" class="text-center align-middle"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var danhSachNuocHoa = [];
+
+        // ĐỌC VÀ KIỂM TRA MÃ TOKEN BÍ MẬT TRÊN THANH ĐỊA CHỈ URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('token');
+        const isAdmin = (token === 'hieutam2502'); // Trả về true nếu trùng khớp mã bí mật của bạn
+
+        // Nếu đúng là Admin truy cập, mở khóa hiển thị nút Thêm mới và tiêu đề cột Thao tác Sửa/Xóa
+        if (isAdmin) {
+            document.getElementById('btnThem').style.display = 'block';
+            document.getElementById('thThaoTac').style.display = 'table-cell';
+        }
+
+        // Hàm gọi API lấy danh sách dữ liệu từ Backend C# SQLite
+        function taiData() {
+            fetch("/api/nuochoa")
+            .then(res => res.json())
+            .then(data => {
+                danhSachNuocHoa = data; 
+                hienThiBang(danhSachNuocHoa); 
+            })
+            .catch(err => console.error("Lỗi lấy dữ liệu:", err));
+        }
+
+        // Hàm đổ dữ liệu mượt mà ra bảng HTML
+        function hienThiBang(dataList) {
+            var html = "";
+            dataList.forEach(x => {
+                html += `<tr>
+                    <td class="col-ma-nuochoa">${x.manuoc_hoa}</td>
+                    <td class="text-start col-ten-sanpham">${x.tennuoc_hoa}</td>
+                    <td class="col-thuong-hieu">${x.thuong_hieu}</td>
+                    <td class="col-dung-tich">${x.dung_tich}</td>
+                    <td class="col-so-luong">${x.so_luong ?? 0}</td>
+                    <td class="text-danger-custom">${x.gia_ban.toLocaleString()} đ</td>
+                    
+                    <!-- LỚP BẢO MẬT: Chỉ hiển thị các nút Sửa/Xóa khi đúng mã token Admin -->
+                    ${isAdmin ? `
+                    <td>
+                        <a href="sua.html?ma=${x.manuoc_hoa}&ten=${x.tennuoc_hoa}&hang=${x.thuong_hieu}&tich=${x.dung_tich}&gia=${x.gia_ban}&luong=${x.so_luong}&token=hieutam2502" class="btn btn-warning btn-sm fw-bold me-1">Sửa</a>
+                        <button onclick="xoa('${x.manuoc_hoa}')" class="btn btn-danger btn-sm fw-bold">Xóa</button>
+                    </td>` : ''}
+                </tr>`;
+            });
+            document.getElementById('list').innerHTML = html;
+        }
+
+        // Hàm lọc tìm kiếm thời gian thực (Real-time Search) không phân biệt chữ hoa thường
+        function timKiemSanPham() {
+            var tuKhoa = document.getElementById("searchInput").value.toLowerCase();
+            var danhSachLoc = danhSachNuocHoa.filter(x => 
+                x.tennuoc_hoa.toLowerCase().includes(tuKhoa) || 
+                x.thuong_hieu.toLowerCase().includes(tuKhoa)
+            );
+            hienThiBang(danhSachLoc);
+        }
+
+        // Hàm thực thi xóa một sản phẩm nước hoa theo mã
+        function xoa(id) {
+            if (confirm("Xác nhận xóa sản phẩm nước hoa này?")) {
+                fetch("/api/nuochoa/" + id, { method: "DELETE" })
+                .then(res => {
+                    if (res.ok) {
+                        taiData(); 
+                    } else {
+                        alert("Xóa thất bại!");
+                    }
+                });
+            }
+        }
+        
+        taiData();
+    </script>
+</body>
+</html>
